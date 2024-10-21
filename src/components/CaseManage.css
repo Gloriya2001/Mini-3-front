@@ -1,0 +1,35 @@
+.tooth-shape {
+    fill: #f2f2f2;
+    stroke: #000;
+    stroke-width: 2;
+    filter: drop-shadow(1px 1px 5px rgba(25, 24, 24, 0.3)); /* Adding shadow for depth */
+    transition: fill 0.3s, stroke 0.3s;
+  }
+  
+  .tooth-shape:hover {
+    fill: #ffffff; /* Slightly lighter color on hover */
+    stroke: #333333;
+  }
+  
+  .upper-tooth .tooth-shape {
+    fill: #e5dbdb; /* Slightly different shade for upper teeth */
+  }
+  
+  .lower-tooth .tooth-shape {
+    fill: #d7cece; /* Darker shade for lower teeth */
+  }
+  
+  .tooth text {
+    font-family: Arial, sans-serif;
+    fill: #070707;
+    font-size: 14px;
+    stroke: #000;
+    stroke-width: 1;
+    text-anchor: middle;
+  }
+  
+  .tooth:hover .tooth-shape{
+    fill: #3133a9;
+  }
+ 
+  
