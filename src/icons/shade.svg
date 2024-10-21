@@ -1,0 +1,8 @@
+<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
+ <g id="Layer_1">
+  <path transform="rotate(90 234.001 237.03)" stroke="#000" id="svg_19" d="m121.18603,236.53174c8.35609,225.49758 233.97062,2.16825 225.6146,0.43366c8.35602,1.73459 -233.97069,-225.93124 -225.6146,-0.43366z" opacity="NaN" fill="#fff"/>
+  <line id="line_1" y2="196.8" x2="331.99999" y1="197.8" x1="133.99999" stroke="#000" fill="none"/>
+  <line id="line_2" y2="271.8" x2="294.99999" y1="270.8" x1="165.99999" stroke="#000" fill="none"/>
+ </g>
+
+</svg>
