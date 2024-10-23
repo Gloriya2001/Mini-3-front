@@ -1,19 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import Navbar from './Navbar';
+import AdminNavbar from './AdminNavbar'
 
-const DoctorDashboard = () => {
-    const [doctorName, setDoctorName] = useState('');
+const ViewProduct = () => {
     const [data, changedata] = useState([])
-    useEffect(() => {
-        // Retrieve the doctor's name from session storage
-        const name = sessionStorage.getItem("name");
-        if (name) {
-            setDoctorName(name);
-        } else {
-            console.log("Doctor's name not found in session storage.");
-        }
-    }, []);
     const fetchdata = () => {
         axios.post("http://localhost:8080/viewProduct", data).then(
             (response) => {
@@ -30,6 +20,21 @@ const DoctorDashboard = () => {
     }
     useEffect(() => { fetchdata() }, [])
 
+    const deletebind = (id) => {
+        let input = { "_id": id }
+        axios.post("http://localhost:8080/deleteProduct", input).then(
+            (response) => {
+                if (response.data.status === "deleted") {
+                    alert("Deleted Successfully")
+                    fetchdata() // Refresh the product list after deletion
+                } else {
+                    alert("Error")
+                }
+            }
+        )
+    }
+
+    // Inline styles for better styling
     const styles = {
         container: {
             padding: '20px',
@@ -90,15 +95,9 @@ const DoctorDashboard = () => {
         }
     }
 
-
-
     return (
         <div>
-            <Navbar/>
-            <div className="container">
-                <h1>Welcome, {doctorName}!</h1> {/* Display the doctor's name */}
-                {/* Additional content for the Doctor Dashboard can go here */}
-            </div>
+            <AdminNavbar />
             <div style={styles.container}>
                 <center><h1 style={styles.heading}><b>PRODUCT CATALOG</b></h1></center><br />
                 <div style={styles.row}>
@@ -110,6 +109,9 @@ const DoctorDashboard = () => {
                                     <img src={`http://localhost:8080/${value.product_img}`} style={styles.cardImg} alt="Product_image" />
                                     <h4 style={styles.productDetail}>Material: {value.about_product}</h4>
                                     <h4 style={styles.productDetail}>Price: ₹{value.product_price}</h4>
+                                    <div style={styles.buttonRow}>
+                                        <button style={styles.btnDanger} onClick={() => { deletebind(value._id) }}>Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         );
@@ -117,6 +119,7 @@ const DoctorDashboard = () => {
                 </div>
             </div>
         </div>
-    );
+    )
 }
-export default DoctorDashboard
+
+export default ViewProduct

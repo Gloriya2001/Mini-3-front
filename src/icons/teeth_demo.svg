@@ -3,7 +3,7 @@
   <!-- Upper Teeth (Arcada Superior) -->
   <!-- Central Incisors -->
   <g class="tooth upper-tooth" id="upper-tooth-11">
-    <path id="11" class="tooth-shape" d="M350 400 Q 370 370, 390 400 T 410 440 Q 390 460, 370 440 Q 350 420, 350 400 Z" fill="#ffffff" stroke="#000" stroke-width="1"/>
+    <path id="11"  class="tooth-shape" d="M350 400 Q 370 370, 390 400 T 410 440 Q 390 460, 370 440 Q 350 420, 350 400 Z" fill="#ffffff" stroke="#000" stroke-width="1"/>
     <text x="360" y="380" font-size="12" text-anchor="middle">11</text>
   </g>
   <g class="tooth upper-tooth" id="upper-tooth-21">
