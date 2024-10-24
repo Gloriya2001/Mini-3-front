@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from './Navbar'
 
-export const OrdersofDoctors = () => {
+const OrdersofDoctors = () => {
     return (
         <div>
-            <Navbar/>
+                <Navbar/>
             OrdersofDoctors
         </div>
     )
 }
+
+export default OrdersofDoctors

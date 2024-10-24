@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TeethDiagram = ({ selectedTeeth }) => {
+const TeethDiagram = ({ selectedTeeth ,shades}) => {
     return (
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="100 100 1000 1000" width="800" height="800">
@@ -181,9 +181,9 @@ const TeethDiagram = ({ selectedTeeth }) => {
         />
         <line x1="133.99999" y1="197" x2="331.99999" y2="197" stroke="#000" strokeWidth="2" />
         <line x1="159" y1="260" x2="306" y2="260" stroke="#000" strokeWidth="2" />
-        <text x="230" y="170" fontSize="18" textAnchor="middle" fill="#000"></text>
-        <text x="230" y="240" fontSize="18" textAnchor="middle" fill="#000"></text>
-        <text x="230" y="290" fontSize="18" textAnchor="middle" fill="#000"></text>
+        <text x="230" y="170" fontSize="18" textAnchor="middle" fill="#000" >{shades.shade1} </text>
+        <text x="230" y="240" fontSize="18" textAnchor="middle" fill="#000" >{shades.shade2}</text>
+        <text x="230" y="290" fontSize="18" textAnchor="middle" fill="#000" >{shades.shade2}</text>
     </g>
 </svg>
 

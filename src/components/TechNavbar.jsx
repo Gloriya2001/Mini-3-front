@@ -14,12 +14,11 @@ const TechNavbar = () => {
             <a class="nav-link" href="/profile">Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/technicianDashboard">Assigned Works</a>
+            <a class="nav-link" href='/techWorks'>Assigned Works</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/FinishedWorks">Finished Works</a>
+            <a class="nav-link" href="/">Log Out</a>
           </li>
-        
         </ul>
       </div>
     </div>

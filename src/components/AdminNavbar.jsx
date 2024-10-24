@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdminNavbar = () => {
   return (
-    <nav class="navbar navbar-expand-lg bg-warning">
+    <nav class="navbar navbar-expand-lg bg-secondary">
     <div class="container-fluid">
       <a class="navbar-brand" href="/adminDashboard">Admin</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,12 +20,16 @@ const AdminNavbar = () => {
             <a class="nav-link" href="/ViewProduct">View Product</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile">Doctor Details</a>
+            <a class="nav-link" href="/viewDoctor">Doctor Details</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile">Technician Details</a>
+            <a class="nav-link" href="/viewTech">Technician Details</a>
           </li>
-        </ul>
+        
+        <li class="nav-item">
+            <a class="nav-link" href="/">Log Out</a>
+          </li>
+      </ul>
       </div>
     </div>
   </nav>

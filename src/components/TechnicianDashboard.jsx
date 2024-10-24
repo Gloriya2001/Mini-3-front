@@ -1,48 +1,33 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import TechNavbar from './TechNavbar'; // Assuming you have a separate navbar for technicians
+import TechNavbar from './TechNavbar'; // Import the technician-specific navbar
+import backgroundImage from './assets/qw.jpg'; // Ensure the image is in the correct path
+import './DoctorDashboard.css'; // Import the CSS file
+import { Link } from 'react-router-dom';
 
 const TechnicianDashboard = () => {
-    const [assignedOrders, setAssignedOrders] = useState([]);
-
-    const fetchAssignedOrders = () => {
-        const technicianId = sessionStorage.getItem("technicianId"); // Assuming you store technician ID in session storage
-        axios.post("http://localhost:8080/viewAssignedOrders", { technicianId })
-            .then((response) => {
-                console.log(response.data);
-                setAssignedOrders(response.data);
-            })
-            .catch((error) => {
-                console.log(error.message);
-                alert("Error fetching assigned orders: " + error.message);
-            });
-    };
+    const [technicianName, setTechnicianName] = useState('');
 
     useEffect(() => {
-        fetchAssignedOrders();
+        // Retrieve the technician's name from session storage
+        const name = sessionStorage.getItem("name");
+        if (name) {
+            setTechnicianName(name);
+        } else {
+            console.log("Technician's name not found in session storage.");
+        }
     }, []);
 
     return (
-        <div>
-            <TechNavbar />
-            <div className="container">
-                <div className="row g-3">
-                    <center><h1><b>ASSIGNED ORDERS</b></h1></center><br />
-                    {assignedOrders.map((order, i) => (
-                        <div className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6" key={i}>
-                            <div className="card">
-                                <div className="card-body">
-                                    <h5 className="card-title">{order.category}</h5>
-                                    <h6 className="card-text"><strong>Doctor: {order.doctor_name}</strong></h6>
-                                    <p className="card-text"><strong>Patient Name:</strong> {order.patient_name}</p>
-                                    <p className="card-text"><strong>Date:</strong> {order.date}</p>
-                                    <p className="card-text"><strong>Units:</strong> {order.tooth_count}</p>
-                                    <p className="card-text"><strong>Price:</strong> {order.total_price}</p>
-                                </div>
-                                <img src={`http://localhost:8080/${order.oral_scan}`} className="card-img-top" alt="Order Oral Scan" />
-                            </div>
-                        </div>
-                    ))}
+        <div className='dashboard'>
+            <TechNavbar /> {/* Use the technician-specific navbar */}
+            <div className="dashboard-container">
+                <div className="dashboard-content">
+                    <h1 className="heading">Welcome, {technicianName}!</h1>
+                </div>
+                <div className="button-container">
+                    <Link to="/techWorks" className="button">
+                        New Works
+                    </Link>
                 </div>
             </div>
         </div>

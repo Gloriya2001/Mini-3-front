@@ -1,0 +1,51 @@
+/* AdminDashboard.css */
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Full height of the viewport */
+    background-image: url('./assets/depositphotos_224661420-stock-photo-flat-lay-tooth-model-stethoscope.jpg'); /* Adjust the path to your image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+    color: white; /* Text color */
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 40px; /* Space between buttons */
+    margin-top: 70px; /* Space above the buttons */
+}
+
+.dashboard-button {
+    background-color: rgba(4, 28, 54, 0.8); /* Semi-transparent blue */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 30px 20px; /* Padding for the button */
+    font-size: 20px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Transition effects */
+    flex: 1 1 200px; /* Allow buttons to grow and shrink, with a minimum width */
+    max-width: 200px; /* Set a maximum width for buttons */
+}
+
+.dashboard-button:hover {
+    background-color: rgba(0, 123, 255, 1); /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.dashboard-button:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8); /* Bright white glow effect */
+}
+
+@media (max-width: 768px) {
+    .button-container {
+        flex-direction: column; /* Stack buttons vertically on smaller screens */
+        gap: 30px; /* Reduced space between buttons */
+    }
+}

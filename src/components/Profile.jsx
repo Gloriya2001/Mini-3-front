@@ -1,172 +1,159 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
+import TechNavbar from './TechNavbar';
 import axios from 'axios';
+import './Profile.css';
 
 const Profile = () => {
-    const [profileData, setProfileData] = useState({
+    const [userData, setUserData] = useState({
         name: '',
-        profile_pic: '',
         email: '',
-        role: '',
-        address: '',
         phone_number: '',
+        alternate_phone_number: '',
+        address: '',
         doctor_id: '',
-        clinic_name: ''
+        technician_id: '', // Added technician_id
+        clinic_name: '',
     });
 
     const [isEditing, setIsEditing] = useState(false);
-    const [profileImg, setProfileImg] = useState(null);
+    const role = sessionStorage.getItem("role");
 
     useEffect(() => {
-        // Fetch user profile data from the server
-        axios.get('http://localhost:8080/getProfile')
-            .then(response => {
-                setProfileData(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching profile data:", error);
-            });
+        const userId = sessionStorage.getItem("userid");
+        if (userId) {
+            fetchUserDetails(userId);
+        } else {
+            console.log("User  ID not found in session storage.");
+        }
     }, []);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setProfileData({ ...profileData, [name]: value });
+    const fetchUserDetails = async (userId) => {
+        try {
+            const response = await axios.post(`http://localhost:8080/userDetailsView`, { userId });
+            const filteredData = {
+                name: response.data.name,
+                email: response.data.email,
+                phone_number: response.data.phone_number,
+                alternate_phone_number: response.data.alternate_phone_number,
+                address: response.data.address,
+                clinic_name: response.data.clinic_name,
+            };
+
+            // Conditional inclusion of role-specific fields
+            if (role === 'Doctor') {
+                filteredData.doctor_id = response.data.doctor_id;
+            } else if (role === 'Technician') {
+                filteredData.technician_id = response.data.technician_id;
+            }
+
+            setUserData(filteredData); // Set user data in state
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+            alert(error.message);
+        }
     };
 
-    const handleImgChange = (event) => {
-        const file = event.target.files[0];
-        setProfileImg(file);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData(prevData => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
 
-    const handleUpdateProfile = () => {
-        const formData = new FormData();
-        for (const key in profileData) {
-            formData.append(key, profileData[key]);
-        }
-        if (profileImg) {
-            formData.append('profile_pic', profileImg);
-        }
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
 
-        axios.post('http://localhost:8080/updateProfile', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then(response => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const userId = sessionStorage.getItem("userid");
+        try {
+            await axios.put(`http://localhost:8080/updateProfile/${userId}`, userData);
             alert("Profile updated successfully!");
             setIsEditing(false);
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("Error updating profile:", error);
-            alert("Error updating profile");
-        });
+            alert(error.message);
+        }
     };
 
     return (
         <div>
-            <Navbar />
-            <div className="container">
-                <h2>Profile Management</h2>
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label>Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="name"
-                                value={profileData.name}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.name}
-                            />
+            {role === 'Doctor' && ( // Conditional rendering based on role
+                <div className="container">
+                    <Navbar />
+                    <h2>User Profile</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="row g-4">
+                            {Object.keys(userData).map((key) => (
+                                <div className="col col-12 col-sm-6" key={key}>
+                                    <label htmlFor={key} className="form-label">
+                                        {key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name={key}
+                                        value={userData[key]}
+                                        onChange={handleChange}
+                                        readOnly={!isEditing} // Make input read-only if not editing
+                                    />
+                                </div>
+                            ))}
+                            <div className="col col-12">
+                                {!isEditing && (
+                                    <button className="btn btn-primary" type="button" onClick={handleEdit}>Edit Profile</button>
+                                )}
+                                {isEditing && (
+                                    <>
+                                        <button className="btn btn-success" type="submit">Submit Changes</button>
+                                        <button className="btn btn-secondary" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                name="email"
-                                value={profileData.email}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.email}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Role</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="role"
-                                value={profileData.role}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.role}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Address</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="address"
-                                value={profileData.address}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.address}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Phone Number</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="phone_number"
-                                value={profileData.phone_number}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.phone_number}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Doctor ID</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="doctor_id"
-                                value={profileData.doctor_id}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.doctor_id}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Clinic Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="clinic_name"
-                                value={profileData.clinic_name}
-                                onChange={handleInputChange}
-                                disabled={!isEditing && profileData.clinic_name}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Profile Picture</label>
- <input
-                                type="file"
-                                className="form-control"
-                                onChange={handleImgChange}
-                                disabled={!isEditing}
-                            />
-                        </div>
-                    </div>
+                    </form>
                 </div>
-                {isEditing ? (
-                    <button className="btn btn-success" onClick={handleUpdateProfile}>
-                        Update Profile
-                    </button>
-                ) : (
-                    <button className="btn btn-primary" onClick={() => setIsEditing(true)}>
-                        Edit Profile
-                    </button>
-                )}
-            </div>
+            )}
+
+            {role === 'Technician' && ( // Conditional rendering for Technician role
+                <div className="container">
+                    <TechNavbar />
+                    <h2>User Profile</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="row g-4">
+                            {Object.keys(userData).map((key) => (
+                                <div className="col col-12 col-sm-6" key={key}>
+                                    <label htmlFor={key} className="form-label">
+                                        {key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name={key}
+                                        value={userData[key]}
+                                        onChange={handleChange}
+                                        readOnly={!isEditing} // Make input read-only if not editing
+                                    />
+                                </div>
+                            ))}
+                            <div className="col col-12">
+                                {!isEditing && (
+                                    <button className="btn btn-primary" type="button" onClick={handleEdit}>Edit Profile</button>
+                                )}
+                                {isEditing && (
+                                    <>
+                                        <button className="btn btn-success" type="submit">Submit Changes</button>
+                                        <button className="btn btn-secondary" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 };
