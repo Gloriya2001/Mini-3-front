@@ -6,9 +6,6 @@ import './AdminOrders.css'; // Import the specific CSS file for AdminOrders
 
 const AdminOrders = () => {
     const [data, setData] = useState([]);
-    const [technicians, setTechnicians] = useState([]);
-    const [selectedTechnicianIds, setSelectedTechnicianIds] = useState({}); // Store selected technician IDs for each order
-
     // Fetch orders from the server
     const fetchData = () => {
         axios.post("http://localhost:8080/viewOrders", {})
@@ -22,65 +19,8 @@ const AdminOrders = () => {
             });
     };
 
-    // Fetch technicians from the server
-    const fetchTechnicians = () => {
-        axios.get("http://localhost:8080/getTechnicians")
-            .then((response) => {
-                console.log("Technicians fetched:", response.data);
-                setTechnicians(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching technicians:", error);
-                alert("Error fetching technicians: " + (error.response ? error.response.data : error.message));
-            });
-    };
+    useEffect(() => {fetchData();}, []);
 
-    useEffect(() => {
-        fetchData();
-        fetchTechnicians();
-    }, []);
-
-    // Delete an order
-    const deleteOrder = (id) => {
-        let input = { "_id": id };
-        axios.post("http://localhost:8080/deleteOrder", input)
-            .then((response) => {
-                if (response.data.status === "deleted") {
-                    alert("DELETED SUCCESSFULLY");
-                    fetchData();
-                } else {
-                    alert("ERROR");
-                }
-            })
-            .catch((error) => {
-                console.error("Error deleting order:", error);
-                alert("Error deleting order: " + (error.response ? error.response.data : error.message));
-            });
-    };
-
-    // Assign a technician to an order
-    const assignTechnician = (orderId) => {
-        const technicianId = selectedTechnicianIds[orderId];
-        if (!technicianId) {
-            alert("Please select a technician.");
-            return;
-        }
-
-        const input = { orderId, technicianId };
-        axios.post("http://localhost:8080/assignTechnician", input)
-            .then((response) => {
-                if (response.data.status === "assigned") {
-                    alert("Technician assigned successfully");
-                    fetchData();
-                } else {
-                    alert("Error assigning technician");
-                }
-            })
-            .catch((error) => {
-                console.error("Error assigning technician:", error);
-                alert("Error assigning technician: " + (error.response ? error.response.data : error.message));
-            });
-    };
 
     return (
         <div>
@@ -112,22 +52,6 @@ const AdminOrders = () => {
                                     <div className="card-body">
                                         <p>Units: {value.tooth_count}</p>
                                         <p>Price: {value.total_price}</p>
-                                    </div>
-                                    <div className="col-12 d-flex justify-content-between align-items-center">
-                                        <div className="dropdown">
-                                            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Assign Technician
-                                            </button>
-                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                {technicians.map((technician, index) => (
-                                                    <button key={index} className="dropdown-item" onClick={() => setSelectedTechnicianIds({ ...selectedTechnicianIds, [value._id]: technician._id })}>
-                                                        {technician.name}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <button className="btn btn-primary" onClick={() => assignTechnician(value._id)}>Assign</button>
-                                        <button className="btn btn-danger" onClick={() => deleteOrder(value._id)}>Delete Order</button>
                                     </div>
                                 </div>
                             </div>

@@ -1,168 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import './CaseManage.css';
 import { ReactComponent as TeethDiagram } from '../icons/teeth_demo.svg';
-
 import Navbar from './Navbar';
 import axios from 'axios';
 
 const CaseManage = () => {
     const [selectedTeeth, setSelectedTeeth] = useState([]);
     const [doctorName, setDoctorName] = useState('');
-    const [data, setdata] = useState(
-        {
-            "patient_name": "",
-            "doctor_name":"",
-            "file_num": "",
-            "date": "",
-            "shade1": "",
-            "shade2": "",
-            "shade3": "",
-            "category": "",
-            "tooth_count": "",
-            "tooth_detail": "",
-            "order_count": "",
-            "oral_scan": "",
-            "Remarks": "",
-            "technician_id": "",
-            "product": "",
-            "price": "",
-            "total_price": "",
-            "order_id": "",
-            "order_status": ""
-        }
-    )
+    const [data, setData] = useState({
+        patient_name: "",
+        doctor_name: "",
+        file_num: "",
+        date: "",
+        shade1: "",
+        shade2: "",
+        shade3: "",
+        category: "",
+        tooth_count: "",
+        tooth_detail: "",
+        order_count: "",
+        oral_scan: "",
+        Remarks: "",
+        technician_id: "",
+        product: "",
+        price: "",
+        total_price: "",
+        order_id: "",
+        order_status: ""
+    });
 
-    
-    const inputHandler = (event) => {
-        setdata(prevData => ({ ...prevData, [event.target.name]: event.target.value }));
-    };
-
-    const readValue = () => {
-        const requiredFields = [
-            data.patient_name,
-            data.file_num,
-            data.date,
-            data.category,
-            data.shade1,
-            data.shade2,
-            data.shade3,
-            data.tooth_detail,
-            data.Remarks
-        ];
-        const allFieldsFilled = requiredFields.every(field => field.trim() !== "");
-        const formData = new FormData();
-        for (const key in data) {
-            formData.append(key, data[key]);
-        }
-        
-        if (oralScan) {
-            formData.append('oral_scan', oralScan); // Append the image file
-        }
-        if (allFieldsFilled) {
-            axios.post("http://localhost:8080/addorder", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            }).then((response) => {
-                console.log(response.data);
-                if (response.data.status === "added") {
-                    alert("SUCCESSFULLY ADDED");
-                } else {
-                    alert("ERROR");
-                }
-            }).catch((error) => {
-                console.error("Error:", error.response ? error.response.data : error.message);
-                alert("Error adding order");
-            });
-            
-        } else {
-            alert("Fill data");
-        }
-        
-    };
-
-
-
-    // Handle tooth selection
-    const handleToothClick = (toothId) => {
-        setSelectedTeeth((prevSelected) => {
-            const isSelected = prevSelected.includes(toothId);
-    
-            // Update the selected teeth state
-            const updatedSelectedTeeth = isSelected
-                ? prevSelected.filter((id) => id !== toothId) // Unselect
-                : [...prevSelected, toothId]; // Select
-    
-            // Update the fill color of the clicked tooth
-            const toothElement = document.getElementById(toothId);
-            if (toothElement) {
-                toothElement.style.fill = isSelected ? '#ffffff' : 'blue'; // Change color based on selection
-            }
-    
-            // Update the tooth_detail in the data state
-            inputHandler({ target: { name: 'tooth_detail', value: updatedSelectedTeeth.join(', ') } });
-    
-            return updatedSelectedTeeth;
-        });
-    };
-
-    // Select all teeth
-    const selectFullTeeth = () => {
-        const svg = document.querySelector('.teeth-diagram');
-        const allToothIds = Array.from(svg.querySelectorAll('path')).map(tooth => tooth.getAttribute('id'));
-        setSelectedTeeth(allToothIds);
-
-        // Change the fill color of all teeth to blue
-        allToothIds.forEach(id => {
-            const toothElement = document.getElementById(id);
-            if (toothElement) {
-                toothElement.style.fill = 'blue'; // Set color to blue
-            }
-        });
-    };
-
-    // Deselect all teeth
-    const unselectAllTeeth = () => {
-        setSelectedTeeth([]);
-
-        const svg = document.querySelector('.teeth-diagram');
-        const toothElements = svg.querySelectorAll('path');
-
-        // Reset the fill color of all teeth to white
-        toothElements.forEach(tooth => {
-            tooth.style.fill = '#ffffff'; // Reset color to white
-        });
-    };
-
-    useEffect(() => {
-        const svg = document.querySelector('.teeth-diagram');
-        const toothPaths = svg.querySelectorAll('path');
-        const name = sessionStorage.getItem("name");
-        console.log("Doctor's name from session storage:", name);
-        if (name) {
-            setDoctorName(name);
-            setdata(prevData => ({ ...prevData, doctor_name: name }))
-        } else {
-            console.log("Doctor's name not found in session storage.");
-        }
-
-        // Attach event listeners for click
-        const handleClick = (event) => {
-            const toothId = event.target.getAttribute('id');
-            handleToothClick(toothId);
-        };
-
-        toothPaths.forEach((tooth) => {
-            tooth.addEventListener('click', handleClick);
-        });
-
-        // Cleanup listeners on unmount
-        return () => {
-            toothPaths.forEach((tooth) => {
-                tooth.removeEventListener('click', handleClick);
-            });
-        };
-    }, []);
+    const [oralScan, setOralScan] = useState(null);
     const [selectedColor1, setSelectedColor1] = useState('');
     const [selectedColor2, setSelectedColor2] = useState('');
     const [selectedColor3, setSelectedColor3] = useState('');
@@ -185,63 +52,152 @@ const CaseManage = () => {
         { name: 'D4', value: 'D4' },
     ]);
 
-   
+    useEffect(() => {
+        const name = sessionStorage.getItem("name");
+        const id = sessionStorage.getItem("userid");
+        if (name) {
+            setDoctorName(name);
+            setData(prevData => ({ ...prevData, doctor_name: name }));
+        }
+    }, []);
 
-    const handleColorChange1 = (event) => {
-        setSelectedColor1(event.target.value)
-        inputHandler({ target: { name: 'shade1', value: event.target.value } });
-
+    const inputHandler = (event) => {
+        setData(prevData => ({ ...prevData, [event.target.name]: event.target.value }));
     };
 
-    const handleColorChange2 = (event) => {
-        setSelectedColor2(event.target.value);
-        inputHandler({ target: { name: 'shade2', value: event.target.value } });
+    const handleColorChange = (setter) => (event) => {
+        setter(event.target.value);
+        inputHandler({ target: { name: event.target.name, value: event.target.value } });
     };
 
-    const handleColorChange3 = (event) => {
-        setSelectedColor3(event.target.value);
-        inputHandler({ target: { name: 'shade3', value: event.target.value } });
-    };
-    const [oralScan, setOralScan] = useState(null);
     const handleOralScanChange = (event) => {
         const file = event.target.files[0];
         setOralScan(file);
     };
-    
 
+    const readValue = () => {
+        const requiredFields = [
+            data.patient_name,
+            data.file_num,
+            data.date,
+            data.category,
+            data.shade1,
+            data.shade2,
+            data.shade3,
+            data.tooth_detail,
+            data.Remarks
+        ];
+        const id = sessionStorage.getItem("userId");
+        if (id) {
+            formData.append('user', id); // Assuming 'user' is the field name in your order model
+        } else {
+            console.error("User  ID not found in sessionStorage");
+        }
 
+        const allFieldsFilled = requiredFields.every(field => field.trim() !== "");
+        const formData = new FormData();
+
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        if (oralScan) {
+            formData.append('oral_scan', oralScan);
+        }
+
+        if (allFieldsFilled) {
+            axios.post("http://localhost:8080/addorder", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then((response) => {
+                alert(response.data.status === "added" ? "SUCCESSFULLY ADDED" : "ERROR");
+            }).catch((error) => {
+                console.error("Error:", error.response ? error.response.data : error.message);
+                alert("Error adding order");
+            });
+        } else {
+            alert("Fill data");
+        }
+    };
+
+    // Handle tooth selection
+    const handleToothClick = (toothId) => {
+        setSelectedTeeth((prevSelected) => {
+            const isSelected = prevSelected.includes(toothId);
+
+            const updatedSelectedTeeth = isSelected
+                ? prevSelected.filter((id) => id !== toothId)
+                : [...prevSelected, toothId];
+
+            const toothElement = document.getElementById(toothId);
+            if (toothElement) {
+                toothElement.style.fill = isSelected ? '#ffffff' : 'blue';
+            }
+
+            inputHandler({ target: { name: 'tooth_detail', value: updatedSelectedTeeth.join(', ') } });
+
+            return updatedSelectedTeeth;
+        });
+    };
+
+    // Select all teeth
+    const selectFullTeeth = () => {
+        const svg = document.querySelector('.teeth-diagram');
+        const allToothIds = Array.from(svg.querySelectorAll('path')).map(tooth => tooth.getAttribute('id'));
+        setSelectedTeeth(allToothIds);
+
+        allToothIds.forEach(id => {
+            const toothElement = document.getElementById(id);
+            if (toothElement) {
+                toothElement.style.fill = 'blue';
+            }
+        });
+    };
+
+    // Deselect all teeth
+    const unselectAllTeeth = () => {
+        setSelectedTeeth([]);
+
+        const svg = document.querySelector('.teeth-diagram');
+        const toothElements = svg.querySelectorAll('path');
+
+        toothElements.forEach(tooth => {
+            tooth.style.fill = '#ffffff';
+        });
+    };
 
     return (
         <div>
             <Navbar />
             <div className="container">
-                <div className="row">
-                    <div className="col col-12">
+                <div className="row g-3">
+                    <div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                         <div className="row g-3">
                             {/* Patient Info Inputs */}
-                            <div className="col col-12">
-                                <label className="form-label">Docotr Name</label>
-                                <input type="text" className="form-control" name='doctor_name' value={data.doctor_name} readOnly/> {/* Display doctor_name */}
-                            </div>
-                            
-                            <div className="col col-12">
-                                <label className="form-label">Patient Name</label>
-                                <input type="text" className="form-control" onChange={inputHandler} name='patient_name' value={data.patient_name}  required/>
+                            <div className="col col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                                <label className="form-label">Doctor Name</label>
+                                <input type="text" className="form-control" name='doctor_name' value={data.doctor_name} readOnly />
                             </div>
 
-                            <div className="col col-12">
+                            <div className="col col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                                <label className="form-label">Patient Name</label>
+                                <input type="text" className="form-control" onChange={inputHandler} name='patient_name' value={data.patient_name} required />
+                            </div>
+
+                            <div className="col col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                                 <label className="form-label">File Number</label>
                                 <input type="text" className="form-control" onChange={inputHandler} name='file_num' value={data.file_num} />
                             </div>
 
-                            <div className="col col-12">
-                                <label className="form-label">Date</label>
+                            <div className="col col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                                <label className="form-label">Expected Date</label>
                                 <input type="date" className="form-control" onChange={inputHandler} name='date' value={data.date} />
                             </div>
 
                             <div className="col col-12">
                                 <label className="form-label">Category</label>
-                                <select name="category" className="form-control" required onChange={inputHandler} value={data.category} >
+                                <select name="category" className="form-control" required onChange={inputHandler} value={data.category}>
                                     <option value="" disabled>Select Category</option>
                                     <option value="Study Model">Study Model</option>
                                     <option value="Dentures">Dentures</option>
@@ -288,26 +244,26 @@ const CaseManage = () => {
 
                             <div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6">
                                 <h2>Select Shades</h2>
-                                <select onChange={handleColorChange1} defaultValue="">
+                                <select onChange={handleColorChange(setSelectedColor1)} defaultValue="" name='shade1'>
                                     <option value="" disabled>Shade 1</option>
                                     {colorOptions.map((option) => (
-                                        <option key={option.value} value={option.value} name='shade1'>
+                                        <option key={option.value} value={option.value}>
                                             {option.name}
                                         </option>
                                     ))}
                                 </select>
-                                <select onChange={handleColorChange2} defaultValue="">
+                                <select onChange={handleColorChange(setSelectedColor2)} defaultValue="" name='shade2'>
                                     <option value="" disabled>Shade 2</option>
                                     {colorOptions.map((option) => (
-                                        <option key={option.value} value={option.value} name='shade2'>
+                                        <option key={option.value} value={option.value}>
                                             {option.name}
                                         </option>
                                     ))}
                                 </select>
-                                <select onChange={handleColorChange3} defaultValue="">
+                                <select onChange={handleColorChange(setSelectedColor3)} defaultValue="" name='shade3'>
                                     <option value="" disabled>Shade 3</option>
                                     {colorOptions.map((option) => (
-                                        <option key={option.value} value={option.value} name='shade3'>
+                                        <option key={option.value} value={option.value}>
                                             {option.name}
                                         </option>
                                     ))}
@@ -337,8 +293,6 @@ const CaseManage = () => {
                             <div className="col col-12">
                                 <label className="form-label">Oral Scan</label>
                                 <input type="file" className="form-control" onChange={handleOralScanChange} name='oral_scan' />
-
-
                             </div>
                             <div className="col col-12">
                                 <label className="form-label">Remarks</label>

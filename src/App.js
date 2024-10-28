@@ -18,6 +18,13 @@ import ViewTech from './components/ViewTech';
 import ViewDoctor from './components/ViewDoctor';
 import ProductPrize from './components/ProductPrize';
 import  TechWorks  from './components/TechWorks';
+import SidebarD from './components/SidebarD';
+import Pending from './components/Pending';
+import Placed from './components/Placed';
+import InProgress from './components/InProgress';
+import Delivered from './components/Delivered';
+import Cancelled from './components/Cancelled';
+import Return from './components/Return';
 
 
 function App() {
@@ -34,7 +41,7 @@ function App() {
          <Route path='/profile' element={<Profile/>} />
          <Route path='/casemanage' element={<CaseManage/>} />
          <Route path='/adminorders' element={<AdminOrders/>} />
-         <Route path='/adminnavbar' element={<adminNavbar/>} />
+         <Route path='/adminnavbar' element={<AdminNavbar/>} />
          <Route path='/techNavbar' element={<TechNavbar/>} />
          <Route path='/Navbar' element={<Navbar/>} />
         
@@ -45,6 +52,17 @@ function App() {
          <Route path='/viewDoctor' element={<ViewDoctor/>} />
          <Route path='/productPrize' element={<ProductPrize/>} />
          <Route path='/techWorks' element={<TechWorks/>} />
+
+
+         <Route path='/sidebarD' element={<SidebarD/>} />
+         <Route path='/pending' element={<Pending/>} />
+         <Route path='/placed' element={<Placed/>} />
+         <Route path='/inProgress' element={<InProgress/>} />
+         <Route path='/delivered' element={<Delivered/>} />
+         <Route path='/cancelled' element={<Cancelled/>} />
+         <Route path='/return' element={<Return/>} />
+
+
         
       </Routes>
     </BrowserRouter>

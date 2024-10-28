@@ -3,13 +3,12 @@ import Navbar from './Navbar';
 import SidebarD from './SidebarD';
 import axios from 'axios';
 
-const OrdersofDoctors = () => {
+const Pending = () => {
 
     const [data, changedata] = useState([])
-    const id = sessionStorage.getItem("userId");
 
     const fetchdata = () => {
-        axios.post("http://localhost:8080/viewOrders", data).then(
+        axios.post("http://localhost:8080/pending", data).then(
             (response) => {
                 changedata(response.data)
             }
@@ -30,7 +29,7 @@ const OrdersofDoctors = () => {
             <div style={{ flex: 1, marginLeft: '250px' }}> {/* Adjust margin to match sidebar width */}
                 <Navbar />
                 <div className="container mt-4"> {/* Add some margin to the top */}
-                    <h1>Track Your Order Here</h1>
+                    <h1>Orders Process On Pending</h1>
     
                     <div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
         
@@ -41,7 +40,6 @@ const OrdersofDoctors = () => {
                                     <th scope="col">Product</th>
                                     <th scope="col">Units</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Track here</th>
                                   
                                 </tr>
                             </thead>
@@ -53,8 +51,6 @@ const OrdersofDoctors = () => {
                                         <td>{value.category}</td>
                                         <td>{value.units}</td>
                                         <td>{value.price}</td>
-
-                                        <td><button className="btn btn-success" >Track</button></td>
                                     </tr>
                                     }
                                 )}
@@ -68,4 +64,4 @@ const OrdersofDoctors = () => {
     );
 };
 
-export default OrdersofDoctors;
+export default Pending;
