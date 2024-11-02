@@ -6,9 +6,9 @@ import axios from 'axios';
 const Placed = () => {
 
     const [data, changedata] = useState([])
-
+    const id = sessionStorage.getItem("userId");
     const fetchdata = () => {
-        axios.post("http://localhost:8080/placed", data).then(
+        axios.post("http://localhost:8080/placed", { userId: id }).then(
             (response) => {
                 changedata(response.data)
             }
@@ -30,28 +30,26 @@ const Placed = () => {
                 <Navbar />
                 <div className="container mt-4"> {/* Add some margin to the top */}
                     <h1>Placed Orders</h1>
-    
+
                     <div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-        
+
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Patient Name</th>
                                     <th scope="col">Product</th>
-                                    <th scope="col">Units</th>
-                                    <th scope="col">Price</th>
-                                  
+
+
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map(
-                                    (value,i)=>{
+                                    (value, i) => {
                                         return <tr>
-                                        <td>{value.patient_name}</td>
-                                        <td>{value.category}</td>
-                                        <td>{value.units}</td>
-                                        <td>{value.price}</td>
-                                    </tr>
+                                            <td>{value.patient_name}</td>
+                                            <td>{value.category}</td>
+
+                                        </tr>
                                     }
                                 )}
                             </tbody>
@@ -59,7 +57,7 @@ const Placed = () => {
                     </div>
                 </div>
             </div>
-                </div>
+        </div>
 
     );
 };

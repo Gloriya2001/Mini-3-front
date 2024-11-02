@@ -28,7 +28,7 @@ const DoctorDashboard = () => {
                     <Link to="/casemanage" className="button">
                         Case Management
                     </Link>
-                    <Link to="/doctorOrders" className="button">
+                    <Link to="/pending" className="button">
                         My Orders
                     </Link>
                 </div>

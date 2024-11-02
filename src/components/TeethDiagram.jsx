@@ -3,7 +3,7 @@ import React from 'react';
 const TeethDiagram = ({ selectedTeeth ,shades}) => {
     return (
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="100 100 1000 1000" width="800" height="800">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="100 100 1500 600" width="800" height="800">
 
         {/* <!-- Upper Teeth (Arcada Superior) -->
         <!-- Central Incisors --> */}

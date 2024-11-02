@@ -55,7 +55,7 @@ const SidebarD = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/returned" style={linkStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = linkHoverStyle.backgroundColor} onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}>
+                    <Link to="/return" style={linkStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor = linkHoverStyle.backgroundColor} onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}>
                         Returned
                     </Link>
                 </li>

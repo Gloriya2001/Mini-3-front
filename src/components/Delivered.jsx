@@ -38,8 +38,7 @@ const Delivered = () => {
                                 <tr>
                                     <th scope="col">Patient Name</th>
                                     <th scope="col">Product</th>
-                                    <th scope="col">Units</th>
-                                    <th scope="col">Price</th>
+                                    
                                   
                                 </tr>
                             </thead>
@@ -49,8 +48,7 @@ const Delivered = () => {
                                         return <tr>
                                         <td>{value.patient_name}</td>
                                         <td>{value.category}</td>
-                                        <td>{value.units}</td>
-                                        <td>{value.price}</td>
+                                    
                                     </tr>
                                     }
                                 )}

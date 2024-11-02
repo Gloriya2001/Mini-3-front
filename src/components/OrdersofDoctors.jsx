@@ -51,7 +51,7 @@ const OrdersofDoctors = () => {
                                         return <tr>
                                         <td>{value.patient_name}</td>
                                         <td>{value.category}</td>
-                                        <td>{value.units}</td>
+                                        <td>{value.tooth_details}</td>
                                         <td>{value.price}</td>
 
                                         <td><button className="btn btn-success" >Track</button></td>

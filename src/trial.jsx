@@ -1,45 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import './CaseManage.css';
-import { ReactComponent as TeethDiagram } from '../icons/teeth_demo.svg';
-import Navbar from './Navbar';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react'; import './CaseManage.css'; import { ReactComponent as TeethDiagram } from '../icons/teeth_demo.svg';
+
+import Navbar from './Navbar'; import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const CaseManage = () => {
     const [selectedTeeth, setSelectedTeeth] = useState([]);
     const [doctorName, setDoctorName] = useState('');
-    const navigate = useNavigate();
-    const [data, setData] = useState({
-        patient_name: "",
-        doctor_name: "",
-        file_num: "",
-        date: "",
-        shade1: "",
-        shade2: "",
-        shade3: "",
-        category: "",
-        tooth_count: "",
-        tooth_detail: "",
-        order_count: "",
-        oral_scan: "",
-        Remarks: "",
-        technician_id: "",
-        product: "",
-        prize: "",
-        units: "",
-        total_price: "",
-        order_id: "",
-        order_status: "Pending"
-    });
-
+    const navigate=useNavigate();
+    const [data, setdata] = useState({
+        "patient_name": "",
+        "doctor_name": "",
+        "file_num": "",
+        "date": "",
+        "shade1": "",
+        "shade2": "",
+        "shade3": "",
+        "category": "",
+        "tooth_count": "",
+        "tooth_detail": "",
+        "order_count": "",
+        "oral_scan": "",
+        "Remarks": "",
+        "technician_id": "",
+        "product": "",
+        "prize": "",
+        "units": "",
+        "total_price": "",
+        "order_id": "",
+        "order_status": ""
+    })
     const inputHandler = (event) => {
-        const { name, value } = event.target;
-        setData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
-
+        setdata({ ...data, [event.target.name]: event.target.value })
+    }
     const readValue = () => {
         const requiredFields = [
             data.patient_name,
@@ -57,12 +49,11 @@ const CaseManage = () => {
         for (const key in data) {
             formData.append(key, data[key]);
         }
-        
+        formData.append('doctor_name', doctorName);
         if (oralScan) {
             formData.append('oral_scan', oralScan); // Append the image file
         }
         
-    
         if (allFieldsFilled) {
             axios.post("http://localhost:8080/addorder", formData, {
                 headers: {
@@ -73,6 +64,7 @@ const CaseManage = () => {
                 if (response.data.status === "added") {
                     alert("SUCCESSFULLY ADDED");
                     navigate("/orderSubmission",{state:response.data.orderId})
+                    
                 } else {
                     alert("ERROR");
                 }
@@ -84,6 +76,7 @@ const CaseManage = () => {
         } else {
             alert("Fill data");
         }
+
     };
 
 
@@ -103,12 +96,8 @@ const CaseManage = () => {
             if (toothElement) {
                 toothElement.style.fill = isSelected ? '#ffffff' : 'blue'; // Change color based on selection
             }
-
             // Update the tooth_detail in the data state
-            setData(prevData => ({
-                ...prevData,
-                tooth_detail: updatedSelectedTeeth.join(', ')
-            }));
+            inputHandler({ target: { name: 'tooth_detail', value: updatedSelectedTeeth.join(', ') } });
 
             return updatedSelectedTeeth;
         });
@@ -148,7 +137,7 @@ const CaseManage = () => {
         const name = sessionStorage.getItem("name");
         if (name) {
             setDoctorName(name);
-            setData(prevData => ({ ...prevData, doctor_name: name }));
+            setdata(prevData => ({ ...prevData, doctor_name: name }))
         } else {
             console.log("Doctor's name not found in session storage.");
         }
@@ -170,7 +159,6 @@ const CaseManage = () => {
             });
         };
     }, []);
-
     const [selectedColor1, setSelectedColor1] = useState('');
     const [selectedColor2, setSelectedColor2] = useState('');
     const [selectedColor3, setSelectedColor3] = useState('');
@@ -193,64 +181,63 @@ const CaseManage = () => {
         { name: 'D4', value: 'D4' },
     ]);
 
+
+
     const handleColorChange1 = (event) => {
-        setSelectedColor1(event.target.value);
-        setData(prevData => ({
-            ...prevData,
-            shade1: event.target.value
-        }));
+        setSelectedColor1(event.target.value)
+        inputHandler({ target: { name: 'shade1', value: event.target.value } });
+
     };
 
     const handleColorChange2 = (event) => {
         setSelectedColor2(event.target.value);
-        setData(prevData => ({
-            ...prevData,
-            shade2: event.target.value
-        }));
+        inputHandler({ target: { name: 'shade2', value: event.target.value } });
     };
 
     const handleColorChange3 = (event) => {
         setSelectedColor3(event.target.value);
-        setData(prevData => ({
-            ...prevData,
-            shade3: event.target.value
-        }));
+        inputHandler({ target: { name: 'shade3', value: event.target.value } });
     };
-
     const [oralScan, setOralScan] = useState(null);
     const handleOralScanChange = (event) => {
         const file = event.target.files[0];
         setOralScan(file);
     };
 
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState([])
+
     const fetchCategory = () => {
-        axios.post("http://localhost:8080/viewPrice", data).then(
+        axios.post("http://localhost:8080/viewPrice",data).then(
             (response) => {
-                setCategory(response.data);
+                setCategory(response.data)
             }
         ).catch(
             (error) => {
-                console.log(error.message);
-                alert(error.message);
+                console.log(error.message)
+                alert(error.message)
             }
         ).finally(
             console.log(data)
-        );
-    };
+        )
+    }
 
-    const [price, setPrice] = useState([]);
+    const [price, setPrice] = useState([])
     const Category = data.category;
 
-    useEffect(() => {
-        fetchCategory();
-    }, []);
+   
+    useEffect(() => { fetchCategory()}, [])
+
+    
 
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
-        setData(prevData => ({ ...prevData, category: selectedCategory }));
+        setdata(prevData => ({ ...prevData, category: selectedCategory }));
         // Call the function to fetch prices based on the selected category
     };
+
+
+
+    
 
     return (
         <div>
@@ -261,7 +248,7 @@ const CaseManage = () => {
                         <div className="row g-3">
                             {/* Patient Info Inputs */}
                             <div className="col col-12">
-                                <label className="form-label">Doctor Name</label>
+                                <label className="form-label">Docotr Name</label>
                                 <input type="text" className="form-control" name='doctor_name' value={data.doctor_name} readOnly /> {/* Display doctor_name */}
                             </div>
 
@@ -272,11 +259,11 @@ const CaseManage = () => {
 
                             <div className="col col-12">
                                 <label className="form-label">File Number</label>
-                                <input type="text " className="form-control" onChange={inputHandler} name='file_num' value={data.file_num} />
+                                <input type="text" className="form-control" onChange={inputHandler} name='file_num' value={data.file_num} />
                             </div>
 
                             <div className="col col-12">
-                                <label className="form-label">Expected Date</label>
+                                <label className="form-label">Date</label>
                                 <input type="date" className="form-control" onChange={inputHandler} name='date' value={data.date} />
                             </div>
 
@@ -291,6 +278,7 @@ const CaseManage = () => {
                                             )
                                         }
                                     )}
+
                                 </select>
                             </div>
                         </div>
@@ -313,11 +301,11 @@ const CaseManage = () => {
 
                             <div className="col col-12">
                                 <label className="form-label">Units</label>
-                                <input type="text" className="form-control" value={data.tooth_detail.split(',').length} onChange={inputHandler} name='units' />
+                                <input type="text" className="form-control" value={data.tooth_detail.split(',').length} name='tooth_count' />
                             </div>
                             <div className="col col-12">
                                 <label className="form-label">Price</label>
-                                <input type="text" className="form-control"  onChange={inputHandler} value={data.tooth_detail.split(',').length*800} name='prize' />
+                                <input type="text" className="form-control" value={data.tooth_detail.split(',').length} />
                             </div>
 
                             <div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6">
@@ -362,7 +350,7 @@ const CaseManage = () => {
                                         <line x1="159" y1="260" x2="306" y2="260" stroke="#000" strokeWidth="2" />
 
                                         <text x="230" y="170" fontSize="18" textAnchor="middle" fill="#000" >{selectedColor1}</text>
-                                        <text x="230" y="240" fontSize="18" textAnchor="middle" fill="#000 ">{selectedColor2}</text>
+                                        <text x="230" y="240" fontSize="18" textAnchor="middle" fill="#000">{selectedColor2}</text>
                                         <text x="230" y="290" fontSize="18" textAnchor="middle" fill="#000" >{selectedColor3}</text>
                                     </g>
                                 </svg>
@@ -389,4 +377,4 @@ const CaseManage = () => {
     );
 };
 
-export default CaseManage;
+export default CaseManage; 

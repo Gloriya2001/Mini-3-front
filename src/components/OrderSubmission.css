@@ -1,0 +1,83 @@
+/* OrderSubmission.css */
+.order-submission-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f4f8;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.order-submission-message {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 2em;
+    color: #333;
+}
+
+.order-id-message,
+.status-message,
+.payment-message {
+    font-size: 1.1em;
+    color: #555;
+    margin: 10px 0;
+}
+
+.my-orders-btn {
+    font-size: 1em;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.my-orders-btn:hover {
+    background-color: #45a049;
+}
+
+.order-details-section {
+    width: 100%;
+    max-width: 800px;
+}
+
+.order-details-section h2 {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.order-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin: 20px;
+}
+
+.order-card-header h5,
+.order-card-header h6 {
+    color: #4CAF50;
+}
+
+.order-card-body {
+    padding: 10px;
+    color: #555;
+}
+
+.order-scan {
+    width: 100%;
+    border-radius: 8px;
+    margin: 15px 0;
+}
